@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
      * @param v - View info
      */
     public void Recalculate(View v) {
-        myDialog.displayDialog(this);
+        myDialog.displayDialog();
     }
 
     @Override
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Insert your Java code between the two horizontal lines.
         //-----------------------------
-        myDialog.displayDialog(this);
+        myDialog.displayDialog();
         //-----------------------------
     }
 
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog, null);
         //Must be final to be mentioned in the anonymous inner class.
-        final EditText editText = (EditText)view.findViewById(R.id.editText);
+        final EditText editText = (EditText) view.findViewById(R.id.editText);
         editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
         builder.setView(view);
 
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog, null);
         //Must be final to be mentioned in the anonymous inner class.
-        final EditText editText = (EditText)view.findViewById(R.id.editText);
+        final EditText editText = (EditText) view.findViewById(R.id.editText);
         editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
         builder.setView(view);
 
@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog, null);
         //Must be final to be mentioned in the anonymous inner class.
-        final EditText editText = (EditText)view.findViewById(R.id.editText);
+        final EditText editText = (EditText) view.findViewById(R.id.editText);
         editText.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(view);
 
@@ -232,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog, null);
         //Must be final to be mentioned in the anonymous inner class.
-        final EditText editText = (EditText)view.findViewById(R.id.editText);
+        final EditText editText = (EditText) view.findViewById(R.id.editText);
         editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED
                 | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         builder.setView(view);
@@ -290,7 +290,7 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog, null);
         //Must be final to be mentioned in the anonymous inner class.
-        final EditText editText = (EditText)view.findViewById(R.id.editText);
+        final EditText editText = (EditText) view.findViewById(R.id.editText);
         editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED
                 | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         builder.setView(view);
@@ -347,7 +347,7 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog, null);
         //Must be final to be mentioned in the anonymous inner class.
-        final EditText editText = (EditText)view.findViewById(R.id.editText);
+        final EditText editText = (EditText) view.findViewById(R.id.editText);
         editText.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(view);
 
@@ -466,32 +466,30 @@ public class MainActivity extends AppCompatActivity {
 
         /**
          * This displays a series of dialog boxes prompting the user to input financial data
-         *
-         * @param mainActivity - screen data used by buildChart
          */
-        private void displayDialog(MainActivity mainActivity) {
+        private void displayDialog() {
             // This program input several values and then calculates how much money you will have over the course of 10 years
 
             // input starting amount
-            double startingAmt = getDouble("Starting Amount", "What is the current value of your savings?");
+            double startingAmt = getDouble(getString(R.string.get_starting_amount_title), getString(R.string.get_starting_amount_msg));
 
             // input interest rate as a percentage
-            double interestRate = getDouble("Interest Rate", "What's the percentage interest rate on your savings?");
+            double interestRate = getDouble(getString(R.string.get_interest_title), getString(R.string.get_interest_msg));
 
             // input contribution per year
-            double inputAmt = getDouble("Contribution Rate", "How much do you plan on contributing each year?");
+            double inputAmt = getDouble(getString(R.string.get_annual_contribution_title), getString(R.string.get_annual_contribution_msg));
 
             // input contribution per year
             int inputYear = -1;
             while (inputYear < 0) {
-                inputYear = getInt("Forecast", "For how many years do you want to project forecast?");
+                inputYear = getInt(getString(R.string.get_year_count_title), getString(R.string.get_year_count_msg));
             }
 
             // calculate amount earned for each year
-            float yearlyWealth[] = calcWealth(startingAmt, interestRate, inputAmt, inputYear+1);
+            float yearlyWealth[] = calcWealth(startingAmt, interestRate, inputAmt, inputYear + 1);
 
             // build bar charts
-            buildChart(yearlyWealth,inputYear,mainActivity);
+            buildChart(yearlyWealth, inputYear);
         }
 
         /**
@@ -499,28 +497,21 @@ public class MainActivity extends AppCompatActivity {
          * The chart is scaled so the biggest bar is equal to the available size of the screen window
          *
          * @param yearlyWealth - a string numbers with how much money we have each year (starting with current value of savings in year 0)
-         * @param yearCnt - the number of years to forecast in the future
-         * @param mainActivity - screen data used when drawing TextView objects
+         * @param yearCnt      - the number of years to forecast in the future
          */
-        private void buildChart(float[] yearlyWealth, int yearCnt, MainActivity mainActivity) {
+        private void buildChart(float[] yearlyWealth, int yearCnt) {
 
             // create TextViews to form a bar graph and put it into a LinearLayout
-            ViewGroup viewGroup = (ViewGroup)findViewById(android.R.id.content);
-            ViewGroup viewGroup2 = (ViewGroup)viewGroup.getChildAt(0);
-            LinearLayout linearLayout = (LinearLayout)viewGroup2.getChildAt(0);
+            LinearLayout linearLayout = (LinearLayout) findViewById(R.id.barGraph);
 
             // erase previous bar graph if it exists
-            if(((LinearLayout) linearLayout).getChildCount() > 0) {
+            if (((LinearLayout) linearLayout).getChildCount() > 0) {
                 ((LinearLayout) linearLayout).removeAllViews();
             }
-            // (old code - I couldn't get the getChildAt to work correctly with multiple layers of Views)
-            //LinearLayout linearLayout = (LinearLayout)findViewById(android.R.id.content);
-            //ViewGroup viewGroup = (ViewGroup)linearLayout.getChildAt(0);
-            //LinearLayout linearLayout2 = (LinearLayout)viewGroup.getChildAt(0);
 
             // calculate max height of all views
             float maxHeight = 0;
-            for (int i = 0; i < yearCnt+1; ++i) {
+            for (int i = 0; i < yearCnt + 1; ++i) {
                 if (yearlyWealth[i] > maxHeight) {
                     maxHeight = yearlyWealth[i];
                 }
@@ -532,9 +523,9 @@ public class MainActivity extends AppCompatActivity {
             float screenFactor = dpHeight / maxHeight;
 
             // build views for each bar of the bar graph
-            for (int i = 0; i < yearCnt+1; ++i) {
+            for (int i = 0; i < yearCnt + 1; ++i) {
 
-                float height = yearlyWealth[i] * screenFactor * 0.75f; // to account for action bar
+                float height = yearlyWealth[i] * screenFactor * 0.6f; // to account for action bar
                 int newHeight = Math.round(height);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT, // width
@@ -544,7 +535,7 @@ public class MainActivity extends AppCompatActivity {
                 float f = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4.0f, displayMetrics);
                 int px = Math.round(f);
                 layoutParams.setMargins(px, 0, px, 0);   //left, top, right, bottom
-                TextView textView = new TextView(mainActivity);
+                TextView textView = new TextView(MainActivity.this);
                 textView.setLayoutParams(layoutParams);
                 textView.setPadding(px, px, px, px);   //left, top, right, bottom
 
@@ -564,16 +555,17 @@ public class MainActivity extends AppCompatActivity {
         /**
          * Get the textcolor to use for each bar in the bar graph
          *
-         * @param year - the number of the current year
+         * @param yearCnt - the number of the current year
          * @return - a hex font color code
          */
-        private int getFontColor(int year){
+        private int getFontColor(int yearCnt) {
+            Resources resources = getResources();
             int color;
-            int counter = year % 10;
-            if (counter  < 4) {
-                color = 0xFF000000;
+            int counter = yearCnt % 10;
+            if (counter < 4) {
+                color = resources.getColor(R.color.black);
             } else {
-                color = 0xFFFFFFFF;
+                color = resources.getColor(R.color.white);
             }
             return color;
         }
@@ -581,61 +573,49 @@ public class MainActivity extends AppCompatActivity {
         /**
          * Get the background color to use for each bar in the bar graph
          *
-         * @param year - the number of the current year
+         * @param yearCnt - the number of the current year
          * @return - a hex background color code
          */
-        private int getBackgroundColor(int year){
-            int color;
-            int counter = year % 10;
-            if (counter == 0) {
-                color = 0xFFFF0000;
-            } else if (counter == 1) {
-                color = 0xFFFF8000;
-            } else if (counter == 2) {
-                color = 0xFFFFFF00;
-            } else if (counter == 3) {
-                color = 0xFF00FF00;
-            } else if (counter == 4) {
-                color = 0xFF0000FF;
-            } else if (counter == 5) {
-                color = 0xFF4B0082;
-            } else if (counter == 6) {
-                color = 0xFF7F00FF;
-            } else if (counter == 7) {
-                color = 0xFF808080;
-            } else if (counter == 8) {
-                color = 0xFFD2B48C;
-            } else {
-                color = 0xFF000000;
-            }
-            return color;
+        private int getBackgroundColor(int yearCnt) {
+            Resources resources = getResources();
+            int colorList[] = {
+                    resources.getColor(R.color.red),
+                    resources.getColor(R.color.orange),
+                    resources.getColor(R.color.yellow),
+                    resources.getColor(R.color.green),
+                    resources.getColor(R.color.blue),
+                    resources.getColor(R.color.purple),
+                    resources.getColor(R.color.indigo),
+                    resources.getColor(R.color.lightgrey),
+                    resources.getColor(R.color.darkgrey),
+                    resources.getColor(R.color.black),
+            };
+            int counter = yearCnt % 10;
+            return colorList[counter];
         }
 
         /**
          * Calculate wealth saved over a series of years, based on a starting amount of money, the average interest rate for each year,
          * the amount the user will contribute each year, and the number of year to forecast
          *
-         * @param startingAmt - the starting amount of money
-         * @param interestRate - the average interest rate of your investments
+         * @param startingAmt     - the starting amount of money
+         * @param interestRate    - the average interest rate of your investments
          * @param contributionAmt - the amount you contribute each year
-         * @param yearCnt - the number of years to run this calculation for
+         * @param yearCnt         - the number of years to run this calculation for
          * @return - a float array of the amount of money you have after each year, with the 0 index being the starting amount of money
          */
         private float[] calcWealth(double startingAmt, double interestRate, double contributionAmt, int yearCnt) {
-            float yearlyWealth[] = new float[yearCnt+1];
-
+            float yearlyWealth[] = new float[yearCnt + 1];
             yearlyWealth[0] = (float) startingAmt;
 
-            for (int year = 1; year < yearCnt+1; ++year) {
-                double newAmt = yearlyWealth[year-1];
-                newAmt *= (1 + interestRate/100);
+            for (int year = 1; year < yearCnt + 1; ++year) {
+                double newAmt = yearlyWealth[year - 1];
+                newAmt *= (1 + interestRate / 100);
                 newAmt += contributionAmt;
                 yearlyWealth[year] = (float) newAmt;
             }
 
             return yearlyWealth;
         }
-
     }
-
 }

@@ -1,33 +1,29 @@
 <!-- I know this isn't the best way to create a horizontal scrolling view, but it works -->
-<HorizontalScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="left"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <!-- I was forced to disable this view because I couldn't get the Java code to work to drill down into Views inside Views,
-    so I had to put the LinearView at the top level
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:fillViewport="true"
-            android:layout_weight="1">
-            </HorizontalScrollView>
-            -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:layout_weight="1">
 
-    <!-- This layout will contain the bar graph -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:baselineAligned="false"
-        android:gravity="bottom"
-        android:orientation="horizontal"
-        android:clickable="true"
-        android:onClick="Recalculate"/>
+        <!-- This layout will contain the bar graph -->
+        <LinearLayout
+            android:id="@+id/barGraph"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:baselineAligned="false"
+            android:gravity="bottom"
+            android:orientation="horizontal"/>
+    </HorizontalScrollView>
 
-    <!-- I was forced to disable this view because I couldn't get the Java code to work to drill down into Views inside Views
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,7 +36,6 @@
         android:background="#BDBDBD"
         android:clickable="true"
         android:gravity="center"
-        android:onClick="Reclaculate"
+        android:onClick="Recalculate"
         android:text="@string/refresh_button"/>
-    -->
-</HorizontalScrollView>
+</LinearLayout>

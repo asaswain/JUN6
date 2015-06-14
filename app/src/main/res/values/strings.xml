@@ -1,6 +1,16 @@
 <resources>
     <string name="app_name">InterestCalc</string>
 
+    <string name="get_starting_amount_title">Starting Amount</string>
+    <string name="get_interest_title">Interest Rate</string>
+    <string name="get_annual_contribution_title">Contribution Amount</string>
+    <string name="get_year_count_title">Number of Years</string>
+
+    <string name="get_starting_amount_msg">What is the current value of your savings?</string>
+    <string name="get_interest_msg">What is the percentage interest rate on your savings?</string>
+    <string name="get_annual_contribution_msg">How much do you plan on contributing each year?</string>
+    <string name="get_year_count_msg">For how many years do you want to project forecast?</string>
+
     <string name="refresh_button">Recalculate</string>
     <string name="action_settings">Settings</string>
     <string name="hint">Type answer here and press Done.</string>
